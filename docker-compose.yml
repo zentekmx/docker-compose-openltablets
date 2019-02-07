@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:5.7
+    ports:
+    - "3306:3306"
+    volumes:
+    - db-volume:/var/lib/mysql:Z
+    - ./mysql-initdb:/docker-entrypoint-initdb.d
+    environment:
+    - MYSQL_ROOT_PASSWORD=secret
+    command:
+    - "--max_allowed_packet=128M"
+    - "--character-set-server=utf8"
+    - "--collation-server=utf8_unicode_ci"
+
+  webstudio:
+    image: openltablets/webstudio:5.21.12
+    depends_on:
+    - mysql
+    ports:
+    - "8080:80"
+    volumes:
+    - olt-volume:/root/.openl
+    - ./driver:/usr/local/tomcat/shared/lib
+    links:
+    - mysql
+
+  oltws:
+    image: openltablets/webstudio:5.21.12
+    depends_on:
+    - mysql
+    - webstudio
+    ports:
+    - "8888:80"
+    links:
+    - mysql
+    - webstudio
+    volumes:
+    - ./driver:/usr/local/tomcat/shared/lib
+    environment:
+    - ruleservice.datasource.type=jcr
+    - production-repository.factory=org.openl.rules.repository.db.JdbcDBRepositoryFactory jdbc:mysql://mysql:3306/oltdeployment?autoReconnect=true&useSSL=false
+
+volumes:
+    db-volume:
+    olt-volume:
