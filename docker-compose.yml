@@ -15,7 +15,7 @@ services:
     - "--character-set-server=utf8"
     - "--collation-server=utf8_unicode_ci"
 
-  webstudio:
+  olt:
     image: openltablets/webstudio:5.21.12
     depends_on:
     - mysql
@@ -24,24 +24,9 @@ services:
     volumes:
     - olt-volume:/root/.openl
     - ./driver:/usr/local/tomcat/shared/lib
+    - ./webservices:/usr/local/tomcat/webapps/webservices
     links:
     - mysql
-
-  oltws:
-    image: openltablets/webstudio:5.21.12
-    depends_on:
-    - mysql
-    - webstudio
-    ports:
-    - "8888:80"
-    links:
-    - mysql
-    - webstudio
-    volumes:
-    - ./driver:/usr/local/tomcat/shared/lib
-    environment:
-    - ruleservice.datasource.type=jcr
-    - production-repository.factory=org.openl.rules.repository.db.JdbcDBRepositoryFactory jdbc:mysql://mysql:3306/oltdeployment?autoReconnect=true&useSSL=false
 
 volumes:
     db-volume:
