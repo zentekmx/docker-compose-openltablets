@@ -16,7 +16,7 @@ services:
     - "--collation-server=utf8_unicode_ci"
 
   olt:
-    image: openltablets/webstudio:5.21.12
+    image: registry.gitlab.com/zentekmx/docker-openltablets 
     depends_on:
     - mysql
     ports:
@@ -24,7 +24,6 @@ services:
     volumes:
     - olt-volume:/root/.openl
     - ./driver:/usr/local/tomcat/shared/lib
-    - ./webservices:/usr/local/tomcat/webapps/webservices
     links:
     - mysql
 
