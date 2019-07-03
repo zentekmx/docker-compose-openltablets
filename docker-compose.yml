@@ -14,14 +14,13 @@ services:
     - "--collation-server=utf8_unicode_ci"
 
   olt:
-    image: registry.gitlab.com/zentekmx/docker-openltablets 
+    image: registry.gitlab.com/zentekmx/ztst/docker-openltablets
     depends_on:
     - mysql
     ports:
-    - "8080:80"
+    - "4000:4000"
     volumes:
     - olt-volume:/root/.openl
-    - ./driver:/usr/local/tomcat/shared/lib
     links:
     - mysql
 
