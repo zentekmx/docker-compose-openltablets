@@ -4,10 +4,10 @@ services:
   mysql:
     image: mysql:5.7
     volumes:
-    - db-volume:/var/lib/mysql:Z
+    - ${MYSQL_VOLUME}:/var/lib/mysql:Z
     - ./mysql-initdb:/docker-entrypoint-initdb.d
     environment:
-    - MYSQL_ROOT_PASSWORD=secret
+    - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     command:
     - "--max_allowed_packet=128M"
     - "--character-set-server=utf8"
@@ -17,13 +17,13 @@ services:
     image: registry.gitlab.com/zentekmx/ztst/docker-openltablets
     depends_on:
     - mysql
+    links:
+    - mysql
     ports:
     - "4000:4000"
     volumes:
-    - olt-volume:/root/.openl
-    links:
-    - mysql
+    - ${OLT_VOLUME}:/root/.openl
 
 volumes:
-    db-volume:
+    mysql-volume:
     olt-volume:
